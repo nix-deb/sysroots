@@ -23,8 +23,10 @@
             git
             pkg-config
 
-            # Compiler
-            gcc
+            # Compilers (unwrapped to avoid Nix-specific behavior)
+            llvmPackages.clang-unwrapped
+            llvmPackages.compiler-rt
+            llvmPackages.lld
 
             # Libraries
             zlib
@@ -34,14 +36,10 @@
 
             # Optional but useful
             ccache
-            lld
           ];
 
           shellHook = ''
-            echo "LLVM development environment"
-            echo "Example build:"
-            echo "  cmake -S llvm -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='clang' -DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi'"
-            echo "  ninja -C build"
+            export CLANG_CONFIG_FILE_SYSTEM_DIR="$PWD/sysroot-jammy"
           '';
         };
       });
